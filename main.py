@@ -12,7 +12,7 @@ config.read('config.ini')
 # Initialize scraping classes
 # TODO Consider function to lambda
 
-def accessoiresCheck(res):
+def itemStockCheck(res):
     soup = BeautifulSoup(res.text, 'html.parser')
     stock_div = soup.find("div", attrs={"id": "addToCartFormHolder"})
 
@@ -34,7 +34,9 @@ if __name__ == "__main__":
 
     multi_pochette_accessoires = StockCheck("멀티 포쉐트 악세수아"
         , "https://kr.louisvuitton.com/kor-kr/products/multi-pochette-accessoires-monogram-nvprod1770359v"
-        , accessoiresCheck, "utf-8")
+        , itemStockCheck, "utf-8")
+    
+    felicie_pochette = StockCheck("포쉐트 펠리시", "https://kr.louisvuitton.com/kor-kr/products/felicie-pochette-monogram-010578#M61276", itemStockCheck, "utf-8")
 
     sleep_mins = config['DEFAULT']['INTERVAL_MINS']
 
@@ -44,7 +46,7 @@ if __name__ == "__main__":
 
 
     while True:
-        returns = check([multi_pochette_accessoires])
+        returns = check([multi_pochette_accessoires, felicie_pochette])
 
         print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), returns)
         for user in chat_ids:
