@@ -19,7 +19,20 @@ class StockCheck:
 
 
     def check(self):
-        res = self.getResponse()
+        try:
+            res = self.getResponse()
+        except requests.ConnectionError as e:
+            print("OOPS!! Connection Error. Make sure you are connected to Internet. Technical Details given below.\n")
+            print(str(e))
+            return None
+        except requests.Timeout as e:
+            print("OOPS!! Timeout Error")
+            print(str(e))
+            return None
+        except requests.RequestException as e:
+            print("OOPS!! General Error")
+            print(str(e))
+            return None
 
         if res.encoding != self.encoding:
             res.encoding = self.encoding
@@ -28,6 +41,8 @@ class StockCheck:
 
     def statusChanged(self):
         status = self.check()
+
+        if status is None: return (False, False, False)
 
         if (self.last_status != status):
             self.last_status = status
